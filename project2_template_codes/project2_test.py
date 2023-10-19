@@ -138,6 +138,18 @@ test_transform = transforms.Compose([
 
 ####################################
 
+def measure_inference(model, testdata):
+    testloader = torch.utils.data.DataLoader(testdata, batch_size=1, shuffle=False, num_workers=10)
+    total_time = 0
+    for data in testloader:
+        start = time.process_time()
+        image, label = data
+        outputs = model(image)
+        end = time.process_time()
+        total_time += end - start
+    print(f"Total average inference time is: {total_time / len(testloader)}")
+
+
 ####################################
 # Define the test dataset and dataloader.
 # You can make some modifications, e.g. batch_size, adding other hyperparameters, etc.
@@ -150,6 +162,7 @@ if __name__ == "__main__":
     testloader = torch.utils.data.DataLoader(testset, batch_size=4,
                                              shuffle=False, num_workers=10)
 
+
     ####################################
 
     # ==================================
@@ -158,6 +171,8 @@ if __name__ == "__main__":
     # DO NOT CHANGE THIS PART, unless you are sure that we can run your testing process correctly.
 
     network = Network()
+
+    measure_inference(network, testset)
     if args.cuda:
         network = network.cuda()
 
