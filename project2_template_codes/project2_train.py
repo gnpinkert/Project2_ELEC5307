@@ -31,7 +31,7 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 
-from network import Network # the network you used
+from network import Network, ResNetwork # the network you used
 
 parser = argparse.ArgumentParser(description= \
                                      'scipt for training of project 2')
@@ -142,6 +142,7 @@ def train_net(net, trainloader, valloader, logging, criterion, optimizer, schedu
 
 train_transform = transforms.Compose([
     transforms.RandomResizedCrop(size=224, scale=(0.8, 0.8)),
+    transforms.Resize((256, 256)),
     transforms.RandomHorizontalFlip(),
     transforms.RandomVerticalFlip(),
     transforms.ToTensor(), 
@@ -171,6 +172,9 @@ if __name__=="__main__":
     # Define the training dataset and dataloader.
     # You can make some modifications, e.g. batch_size, adding other hyperparameters, etc.
 
+    import ssl
+
+    ssl._create_default_https_context = ssl._create_unverified_context
 
     image_path = '../2023_ELEC5307_P2Train/'
 
@@ -188,7 +192,7 @@ if __name__=="__main__":
     # ==================================
     # use cuda if called with '--cuda'.
 
-    network = Network()
+    network = ResNetwork()
     if args.cuda:
         network = network.cuda()
 
@@ -200,7 +204,7 @@ if __name__=="__main__":
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(network.parameters(), lr=0.0004, momentum=0.9)  # adjust optimizer settings
 
-    for param in network.dinov2_vits14.parameters():
+    for param in network.resnet.parameters():
         param.requires_grad = False
 
     train_net(net=network, trainloader=trainloader, valloader=valloader, criterion=criterion, optimizer=optimizer, scheduler=None, epochs=10, logging=logging)

@@ -40,7 +40,7 @@ import torchvision
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 
-from network import Network # the network you used
+from network import Network, ResNetwork # the network you used
 
 # ==================================
 # control input options. DO NOT CHANGE THIS PART, unless you are sure that we can run your testing process correctly.
@@ -131,7 +131,7 @@ logger.info(args)
 # Remember to make the normalize value same as in the training transformation.
 
 test_transform = transforms.Compose([
-    transforms.CenterCrop(224),
+    transforms.Resize((256, 256)),
     transforms.ToTensor(), 
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
@@ -162,7 +162,6 @@ if __name__ == "__main__":
     testloader = torch.utils.data.DataLoader(testset, batch_size=4,
                                              shuffle=False, num_workers=10)
 
-
     ####################################
 
     # ==================================
@@ -170,7 +169,7 @@ if __name__ == "__main__":
     # use cuda if called with '--cuda'.
     # DO NOT CHANGE THIS PART, unless you are sure that we can run your testing process correctly.
 
-    network = Network()
+    network = ResNetwork()
 
     measure_inference(network, testset)
     if args.cuda:

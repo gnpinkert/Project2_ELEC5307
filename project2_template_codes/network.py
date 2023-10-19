@@ -9,6 +9,7 @@ import torch.nn as nn
 import torch
 import torch.hub
 import torchvision.transforms
+from torchvision.models import resnet50
 
 
 class Network(nn.Module):
@@ -33,6 +34,23 @@ class Network(nn.Module):
         x = self.dropout(x)
         x = self.fc2(x)
         return x
+
+
+class ResNetwork(nn.Module):
+    def __init__(self):
+        super(ResNetwork, self).__init__()
+        self.resnet = resnet50(weights="IMAGENET1K_V1")
+        self.fc1 = nn.Linear(1000, 500)
+        self.fc2 = nn.Linear(500, 25)
+        self.dropout = nn.Dropout(p=0.75)
+
+    def forward(self, x):
+        x = self.resnet(x)
+        x = self.fc1(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
+
 
 if __name__=="__main__":
     import ssl
