@@ -15,11 +15,13 @@ from torchvision.models import resnet50
 class Network(nn.Module):
     def __init__(self):
         super(Network, self).__init__()
-        self.dinov2_vits14 = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
+        self.backbone = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
         self.patch_size = 14
         self.fc1 = nn.Linear(384, 196)
         self.fc2 = nn.Linear(196, 25)
-        self.dropout = nn.Dropout(p=0.75)
+        self.dropout1 = nn.Dropout(p=0.5)
+        self.dropout2 = nn.Dropout(p=0.5)
+        self.relu = nn.ReLU()
 
     def forward(self, x):
         batch, channel, height, width = x.size()
@@ -29,25 +31,32 @@ class Network(nn.Module):
 
         resize_op = torchvision.transforms.Resize(size=(next_largest_height_divisor, next_largest_width_divisor),antialias=True)
         x = resize_op(x)
-        x = self.dinov2_vits14(x)
+        x = self.backbone(x)
+        x = self.dropout1(x)
         x = self.fc1(x)
-        x = self.dropout(x)
+        x = self.relu(x)
+        x = self.dropout2(x)
         x = self.fc2(x)
+
         return x
 
 
 class ResNetwork(nn.Module):
     def __init__(self):
         super(ResNetwork, self).__init__()
-        self.resnet = resnet50(weights="IMAGENET1K_V1")
-        self.fc1 = nn.Linear(1000, 500)
-        self.fc2 = nn.Linear(500, 25)
-        self.dropout = nn.Dropout(p=0.75)
+        self.backbone = resnet50(weights="IMAGENET1K_V1")
+        self.fc1 = nn.Linear(1000, 196)
+        self.fc2 = nn.Linear(196, 25)
+        self.dropout1 = nn.Dropout(p=0.5)
+        self.dropout2 = nn.Dropout(p=0.5)
+        self.relu = nn.ReLU()
 
     def forward(self, x):
-        x = self.resnet(x)
+        x = self.backbone(x)
+        x = self.dropout1(x)
         x = self.fc1(x)
-        x = self.dropout(x)
+        x = self.relu(x)
+        x = self.dropout2(x)
         x = self.fc2(x)
         return x
 
