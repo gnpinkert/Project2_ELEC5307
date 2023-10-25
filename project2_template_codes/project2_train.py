@@ -176,13 +176,13 @@ train_transform = transforms.Compose([
     transforms.RandomVerticalFlip(),
     transforms.GaussianBlur(kernel_size=5, sigma=(0.1, 2.0)),
     transforms.ToTensor(), 
-    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
 ])
 
 def getFilePaths(filePath, savePath = None):
     training_files = []
     test_files = []
-    validation_files = []
+    validation_files = []   
     for root, dirs, _ in os.walk(filePath):
         for dir in dirs:
             for _, _, files in os.walk(os.path.join(root, dir)):
