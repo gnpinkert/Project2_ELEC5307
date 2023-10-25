@@ -1,0 +1,12 @@
+2023-10-25 11:09:02,562 using args:
+2023-10-25 11:09:02,562 Namespace(cuda=False, output_path='./')
+2023-10-25 11:09:03,281 xFormers not available
+2023-10-25 11:09:03,283 xFormers not available
+2023-10-25 11:09:03,315 using MLP layer as FFN
+2023-10-25 11:10:00,104 Total average inference time is: 0.7548271076518777
+2023-10-25 11:10:56,007 =======================================================
+2023-10-25 11:10:56,007 SUMMARY of Project2
+2023-10-25 11:10:56,007 The number of testing image is 293
+2023-10-25 11:10:56,007 Accuracy of the network on the test images: 98.29 %
+2023-10-25 11:10:56,007 =======================================================
+2023-10-25 11:12:02,369 Saved Confusion Matrix as {name}
